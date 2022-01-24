@@ -11,6 +11,8 @@ namespace flipscreen {
 	#include <flipscreen.cpp>
 }
 
+#include <iostream>
+
 // my functions for when I replace generated code with "working" code
 
 using addr = std::uint32_t;
@@ -49,18 +51,19 @@ struct stru {
 
 // replacement functions
 
-NJS_VECTOR* __fastcall sub_4EC770_replacement(int a1) {
+NJS_VECTOR* __fastcall sub_4EC770_replacement(const int a1) {
 	// big yikes section
 
 	const int v1{ 9432 * a1 };
 	const double v2{ flt_ref(0x1DCFF3C) };
 	constexpr auto stru_1DCFF40 = stru{ 0x1DCFF40 };
-	auto& stru_1DCFF40_field_194 = stru_1DCFF40.field<NJS_VECTOR>(0x194);
-	addr stru_1DCFF40_gap_1AC{ 0x1DCFF40 + 0x1AC };
-	NJS_VECTOR* result{ &stru_1DCFF40_field_194 + v1 };
+	auto& stru_1DCFF40_field_194_plus_v1 =
+		stru_1DCFF40.field<NJS_VECTOR>(0x194 + v1);
+	constexpr addr stru_1DCFF40_gap_1AC{ 0x1DCFF40 + 0x1AC };
+	NJS_VECTOR* result{ &stru_1DCFF40_field_194_plus_v1 };
 	memcpy(
 		reinterpret_cast<void*>(stru_1DCFF40_gap_1AC + v1 + 40),
-		reinterpret_cast<void*>(&stru_1DCFF40_field_194 + v1),
+		reinterpret_cast<void*>(&stru_1DCFF40_field_194_plus_v1),
 		0x40u
 	);
 
