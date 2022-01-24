@@ -332,3 +332,8 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+## My ignores
+
+out/build/
+CMakeSettings.json
