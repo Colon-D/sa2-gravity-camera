@@ -4,7 +4,9 @@
 #include <limits>
 #include <SA2ModLoader.h>
 #include <UsercallFunctionHandler.h>
-// I probably should not be including a source file...
+#include <IniFile.hpp>
+// I probably should not be including a source file, 
+// but it has a function I want (matrix4x4_Lookat())
 namespace flipscreen {
 	#include <flipscreen.cpp>
 }
@@ -134,7 +136,7 @@ NJS_VECTOR* __fastcall sub_4EC770_replacement(int a1) {
 	result[4].x = result->x;
 	result[4].y = result->y;
 	result[4].z = result->z;
-	 
+	
 	result[4].x -= flt_ref(stru_1DCFF40_gap_1AC + v1 + 40);
 	result[4].y -= flt_ref(stru_1DCFF40_gap_1AC + v1 + 44);
 	result[4].z -= flt_ref(stru_1DCFF40_gap_1AC + v1 + 48);
@@ -207,6 +209,30 @@ extern "C" {
 			reinterpret_cast<void*>(0x4EC770),
 			sub_4EC770_replacement
 		);
+
+		// my flipscreen "compatibility" fix (ie, stealing their entire mod)
+		const IniFile* settings =
+			new IniFile(std::string(path) + "\\config.ini");
+
+		std::string sFlipmode = settings->getString("Settings", "Flipmode");
+		if (sFlipmode._Equal("Horizontal")) {
+			flipscreen::active_flipmode =
+				flipscreen::flipmode::flipmode_Horizontal;
+		}
+		else if (sFlipmode._Equal("Vertical")) {
+			flipscreen::active_flipmode =
+				flipscreen::flipmode::flipmode_Vertical;
+		}
+
+		flipscreen::rotationRadians =
+			settings->getFloat("Settings", "Rotate Screen") /
+			flipscreen::Rad2Deg;
+		flipscreen::rotationSpeed =
+			settings->getFloat("Settings", "Rotation Animation Speed") /
+			flipscreen::Rad2Deg;
+
+		delete settings;
+
 		// my flipscreen::hookFlipScreen() replacement
 		WriteJump(
 			reinterpret_cast<void*>(0x427AA0),
